@@ -86,7 +86,7 @@ async def us(message: types.Message):
     if len(data) <= 1:
         await message.answer(f'Напиши ник пользователя после команды /bs')
     else:
-        await osu.get_osu_best_scores(bot, message, data[1])
+        await osu.get_osu_best_scores(bot, message, data[1], 4)
 
 # ============== Comand /ls ==============
 
@@ -193,7 +193,8 @@ async def callback_query_keyboard(callback: types.CallbackQuery):
                 await callback.message.answer(f'Вот что я могу сделать: ', reply_markup=kb.main)
 
     elif callback.data[0:3] == 'bs:':
-        await osu.get_osu_best_scores(bot, callback, callback.data[3:])
+        info = callback.data.split(':')
+        await osu.get_osu_best_scores(bot, callback, info[1], int(info[2]))
 
     elif callback.data[0:3] == 'ls:':
         info = callback.data.split(':')

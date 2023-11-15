@@ -40,7 +40,14 @@ async def yourself_name(bot, message, data):
     await osu.get_osu_profile(bot, message, data)
 
 
+async def change_nick(bot, message, data):
+    cursor.execute(
+        f"""UPDATE users SET name_osu = '{data}' WHERE user_id = {message.chat.id}""")
+    database.commit()
+    await message.answer(f'Я поменял твой ник на: {data}', reply_markup=kb.main)
+
 # ============== New users ==============
+
 
 async def db_table_val(message, bot):
     us_id = message.from_user.id
@@ -52,7 +59,7 @@ async def db_table_val(message, bot):
         f'SELECT * FROM users WHERE user_id = {us_id} ').fetchone()
     if user is None:
         cursor.execute('INSERT INTO users (user_id, user_name, username, join_date) VALUES (?, ?, ?, ?)',
-                    (us_id, us_name, username, joindate))
+                       (us_id, us_name, username, joindate))
         database.commit()
         await bot.send_message(chat_id=os.getenv('ADMIN_ID'), text=f'Зарегестрировался новый пользователь! @{username}, {us_name}')
         print(f'Пользователь {message.from_user.username} {message.from_user.first_name} зарегестрировался! в', (

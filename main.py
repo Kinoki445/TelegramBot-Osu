@@ -105,6 +105,7 @@ async def us(message: types.Message):
 class my_fsm(StatesGroup):
     osu_id = State()
     yourself = State()
+    change_nick = State()
 
 
 @dp.callback_query_handler(text='user')
@@ -138,11 +139,17 @@ async def yourself(callback: types.CallbackQuery, state: FSMContext):
         await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, text='Напиши свой ник в osu', reply_markup=kb.close2)
 
 
-@dp.message_handler(state=my_fsm.yourself)
-async def yourself(message: types.Message, state: FSMContext):
+@dp.callback_query_handler(text='change_nick')
+async def change_nick(callback: types.CallbackQuery, state: FSMContext):
+    await my_fsm.change_nick.set()
+    await bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, text='Напиши свой ник в osu', reply_markup=kb.close2)
+
+
+@dp.message_handler(state=my_fsm.change_nick)
+async def change_nick(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data = message.text
-    await db.yourself_name(bot, message, data)
+    await db.change_nick(bot, message, data)
     await state.finish()
 
 # ============== Another text(message) ==============

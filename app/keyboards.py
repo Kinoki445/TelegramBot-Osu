@@ -4,7 +4,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 main = InlineKeyboardMarkup(row_width=3)
 main.add(InlineKeyboardButton(text="yourself", callback_data="yourself"),
-        InlineKeyboardButton(text="another user", callback_data="user"))
+        InlineKeyboardButton(text="another user", callback_data="user"),
+        InlineKeyboardButton(text="change nick", callback_data="change_nick"))
 
 # ============== Close button ==============
 
